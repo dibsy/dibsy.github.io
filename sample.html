@@ -1,5 +1,5 @@
 <body>
-  <iframe src="http://localhost:1337/settings" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+  <iframe src="http://localhost:1337/" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
   <script>
     const frame = document.querySelector('iframe');
     frame.onload = () => frame.contentWindow.postMessage(`(async () => {
