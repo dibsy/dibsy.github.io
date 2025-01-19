@@ -1,0 +1,25 @@
+site_name: Dibyendu SIKDAR
+site_description: Offensive & Defesive Operations covering Web, Cloud, Infra, IOT and many more..
+site_url: http://www.ohmypwn.com
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: light green
+  font:
+    code: Roboto Serif
+plugins:
+  - search
+  - blog:
+      blog_dir: .
+  - tags
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
