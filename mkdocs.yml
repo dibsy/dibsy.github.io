@@ -1,6 +1,5 @@
 site_name: Dibyendu SIKDAR
 site_description: Offensive & Defesive Operations covering Web, Cloud, Infra, IOT and many more..
-site_url: http://www.ohmypwn.com
 theme:
   name: material
   palette:
