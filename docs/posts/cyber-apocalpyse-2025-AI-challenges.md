@@ -5,6 +5,8 @@ categories:
   - AI Red Team
   - CTF Writeup
   - Hackthebox Cyber Apocalypse CTF 2025
+authors:
+  - dibsy
 ---
 
 
