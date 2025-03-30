@@ -11,6 +11,8 @@ plugins:
   - search
   - blog:
       blog_dir: .
+      post_excerpt: optional  # Enable excerptse
+      
   - tags
 markdown_extensions:
   - pymdownx.highlight:

@@ -7,9 +7,9 @@ categories:
   - Hackthebox Cyber Apocalypse CTF 2025
 ---
 
+
 # Writeup of AI Challenges of the Cyber Apocalypse CTF 2025: Tales from Eldoria
-
-
+<!-- more -->
 ## Cursed GateKeeper
 
 ### Objective
