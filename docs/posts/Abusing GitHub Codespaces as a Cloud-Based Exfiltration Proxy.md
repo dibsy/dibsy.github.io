@@ -22,6 +22,10 @@ Trend Micro was the first to report a known threat actor abusing this feature to
 
 While analyzing these reports through an adversarial lens, I began to explore the feasibility of using GitHub Codespaces as a passive traffic redirector for data exfiltration to an attacker-controlled endpoint. Several factors make this an attractive vector: (1) GitHub is widely trusted and often whitelisted within enterprise networks, reducing the likelihood of outbound traffic being flagged or blocked; (2) infrastructure can be spun up rapidly using a free GitHub account, with no requirement for identity verification, credit card details, or billing information, enabling anonymous operation; and (3) the goal would be to design the redirection mechanism to remain stealthy, minimizing observable artifacts such as long-lived processes or anomalous outbound traffic patterns. This approach shifts the traditional use of Codespaces from code execution to covert network facilitation, leveraging GitHub’s trusted domain and infrastructure to mask adversarial activity.
 
+One of its key features is the ability to expose running applications via forwarded ports. When an application inside the codespace listens on a specific port, GitHub detects it and allows you to forward that port, making the service accessible via a secure HTTPS URL. You can choose to keep the port private (visible only to you) or make it public, enabling easy sharing for testing, demos, or collaboration without needing to deploy the app to a remote server. This simplifies the development workflow, especially for web apps, APIs, and microservices.
+
+When you open up a port like 3000 in GitHub Codespaces, a secure URL is automatically generated for you, such as https://potential-waffle-95vqxxpgjwrfpvrx-3000.app.github.dev. To allow others to access this URL, you need to explicitly make the port public. It's important to note that you don't access the application using a :3000 suffix in the URL (e.g., https://...app.github.dev:3000). Instead, GitHub handles the routing internally—when you visit the generated URL, the request is automatically forwarded to port 3000 inside your Codespace environment.
+
 ## DATA EXFILTRATION
 
 Here’s a simplified overview of the data exfiltration flow over HTTPS:
@@ -30,7 +34,7 @@ Here’s a simplified overview of the data exfiltration flow over HTTPS:
 - A lightweight redirector service running inside the Codespace receives the HTTPS request and forwards the data to an Ngrok tunnel endpoint.
 - The Ngrok tunnel securely relays the data to the attacker’s local HTTP listener, effectively bridging the target environment to the attacker’s system via trusted cloud infrastructure.
 
-!!! example "Diagram"
+!!! example "Diagram - exfiltrating using curl request to https://...fpvrx-3000.app.github.dev"
     ![Architecture](../images/exfil-codespaces/architecture.png)
 
 ### Proof Of Concept
