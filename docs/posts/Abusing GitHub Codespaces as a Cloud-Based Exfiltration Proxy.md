@@ -34,8 +34,8 @@ Here’s a simplified overview of the data exfiltration flow over HTTPS:
 - A lightweight redirector service running inside the Codespace receives the HTTPS request and forwards the data to an Ngrok tunnel endpoint.
 - The Ngrok tunnel securely relays the data to the attacker’s local HTTP listener, effectively bridging the target environment to the attacker’s system via trusted cloud infrastructure.
 
-!!! example "Diagram - exfiltrating using curl request to https://...fpvrx-3000.app.github.dev"
-    ![Architecture](../images/exfil-codespaces/architecture.png)
+!!! example "Diagram - exfiltrating using curl request to https://...fpvrx-9000.app.github.dev"
+    ![Architecture](../images/exfil-codespaces/architecture.svg)
 
 ### Proof Of Concept
 
