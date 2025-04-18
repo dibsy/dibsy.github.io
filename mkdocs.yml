@@ -1,12 +1,16 @@
 site_name: Dibyendu SIKDAR
-site_description: Offensive & Defesive Operations covering Web, Cloud, Infra, IOT and many more..
+site_description: Offensive & Defesive Operations covering Web, Cloud, Infra, CTFs and many more..
 theme:
   name: material
   palette:
     scheme: slate
-    primary: light green
+    primary: lime
   font:
     code: Roboto Serif
+  features:
+    - navigation.tabs
+    - content.code.copy
+    - content.code.annotate
 plugins:
   - search
   - blog:
@@ -15,6 +19,7 @@ plugins:
       
   - tags
 markdown_extensions:
+  - admonition
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -22,5 +27,13 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
-  - admonition
   - pymdownx.details
+  
+nav:
+  - Home: index.md
+  - Blog: blog/index.md
+  - Docs:
+      - Getting Started: docs/getting-started.md
+      - Tools: docs/tools.md
+  - About: about.md
+  - GitHub: https://github.com/your-org/your-repo
