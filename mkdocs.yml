@@ -31,9 +31,6 @@ markdown_extensions:
   
 nav:
   - Home: index.md
-  - Blog: blog/index.md
-  - Docs:
-      - Getting Started: docs/getting-started.md
-      - Tools: docs/tools.md
   - About: about.md
   - GitHub: https://github.com/dibsy/
+  - Old Blog : https://oxhat.blogspot.com/
