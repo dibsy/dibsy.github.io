@@ -15,6 +15,8 @@ authors:
 
 The application has an IDOR (Indirect Object Reference) vulnerability which can be used to retrieve the flag.
 
+<!-- more -->
+
 ### Exploitation
 
 No source code was provided for this challenge. Looking through the API calls over burp proxy revealed a particular API which had a list of commands in it.
