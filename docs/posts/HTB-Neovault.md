@@ -10,7 +10,7 @@ authors:
   - dibsy
 ---
 
-# JS Miner Recon & API Enumeration
+# HTB Neovault Writeup
 
 ### Summary
 
