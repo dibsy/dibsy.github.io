@@ -52,11 +52,12 @@ A combination of `grep` commands was used to extract API paths:
 
 ```bash
 (
-  grep -Eroh '"\/api\/[a-zA-Z0-9_\/\-]+' *.js* ;
-  grep -Eroh '"https?:\/\/[^"]+\/api\/[a-zA-Z0-9_\/\-]+' *.js* ;
-  grep -Eroh 'fetch\(["'"'"']\/api\/[^"'"'"']+' *.js* ;
-  grep -Eroh 'axios\.(get|post|put|delete)\(["'"'"']\/api\/[^"'"'"']+' *.js*
+  grep -Eroh '"/[a-zA-Z0-9_\/\.\-]+' *.js* ;
+  grep -Eroh '"https?:\/\/[^"]+/[a-zA-Z0-9_\/\.\-]+' *.js* ;
+  grep -Eroh 'fetch\(["'"'"']/[a-zA-Z0-9_\/\.\-]+' *.js* ;
+  grep -Eroh 'axios\.(get|post|put|delete)\(["'"'"']/[a-zA-Z0-9_\/\.\-]+' *.js*
 ) | sed 's/^"//' | sort -u > api_endpoints.txt
+
 ```
 
 This revealed multiple interesting API routes:
