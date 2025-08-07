@@ -10,8 +10,7 @@ authors:
   - dibsy
 ---
 
-# Logical Bug + Command Injection = Flag
-
+# HTB ARMAXIS Writeup
 ### Summary
 
 The application was vulnerable to a logical flaw in the password reset mechanism that allowed unauthorized password resets. By exploiting this flaw, we reset the **admin** user's password. This privilege escalation allowed access to an admin-only weapon dispatch feature, which included a command injection vulnerability via unsanitized `curl` execution in Markdown parsing. Combining both vulnerabilities led to command execution and flag retrieval.
