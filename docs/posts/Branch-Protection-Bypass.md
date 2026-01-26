@@ -22,6 +22,8 @@ This post focuses **only** on **GitHub Branch Protection bypass techniques**, fr
 
 ---
 
+<!-- more -->
+
 ## Threat model
 
 **Initial access**
