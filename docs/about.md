@@ -11,10 +11,11 @@
 <a href="https://stackoverflow.com/users/2626085/dibsyhex"><img src="https://stackoverflow.com/users/flair/2626085.png" width="208" height="58" alt="profile for Dibsyhex at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Dibsyhex at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
 
 ### Certification
-- OSCP, GCPN, CBBH
+- OSCP, GCPN, CWES
 
 ### CTF Competition
 
+- HackTheBox / HackerOne AI Red Teaming CTF: /ai_gon3_rogu3/ 2025 - Rank 13th
 - HackTheBox Cyber Apocalypse CTF 2025 - Team Rank 104/8100+ : Team CS
 - Cisco Offensive Summit 2024 CTF by Immersive Labs - Rank 4th (Team)
 - HackTheBox Business CTF 2024 - Team Rank 7/940 Team : Cisco
