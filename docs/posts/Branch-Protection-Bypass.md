@@ -137,7 +137,7 @@ If the token has admin rights on the repo, the attacker can perform the followin
 
 !!! danger "Deleting a branch protection rule"
     1. Delete the branch protection rule
-    2. Push code
+    2. Push code directly to protected branch
     3. Optionally recreate the rule (for stealth)
 
 ```bash
@@ -190,7 +190,7 @@ If the token has admin rights, the attacker can perform the following techniques
 !!! danger "Adding the compromised actor to the bypass list"
     - Identify the token actor
     - Add actor to bypass list
-    - Push code
+    - Push code directly to protected branch
 
 ### Step 1 — Identify the token actor
 
@@ -216,7 +216,7 @@ curl -X PATCH \
   }'
 ```
 
-### Step 3 — Push code
+### Step 3 — Push code directly to protected branch
 
 ```bash
 git push origin main
@@ -267,7 +267,7 @@ If the token has admin rights, the attacker can perform the following techniques
     - Push a named branch rule
     - Identify the token actor
     - Add actor to bypass list
-    - Push code
+    - Push code directly to protected branch
 
 ### Step 1 - Push a named branch rule
 
@@ -313,7 +313,7 @@ curl -X PATCH \
   }'
 ```
 
-### Step 4 — Push code
+### Step 4 — Push code directly to protected branch
 
 ```bash
 git push origin main
