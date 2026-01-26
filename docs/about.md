@@ -15,7 +15,7 @@
 
 ### CTF Competition
 
-- HackTheBox / HackerOne AI Red Teaming CTF: /ai_gon3_rogu3/ 2025 - Rank 13th
+- HackTheBox / HackerOne AI Red Teaming CTF: /ai_gon3_rogu3/ 2025 - Rank 13
 - HackTheBox Holmes CTF - Rank 1064
 - HackTheBox Cyber Apocalypse CTF 2025 - Team Rank 104/8100+ : Team CS
 - Cisco Offensive Summit 2024 CTF by Immersive Labs - Rank 4th (Team)
