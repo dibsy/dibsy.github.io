@@ -6,7 +6,8 @@ theme:
     scheme: slate
     primary: lime
   font:
-    code: Roboto Serif
+    text: Iceland
+    code: Iceland
   features:
     - navigation.tabs
     - content.code.copy
@@ -26,9 +27,17 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.details
-  
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
+
 nav:
   - Home: index.md
   - About: about.md
