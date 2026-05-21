@@ -1,22 +1,24 @@
-# About Me
-
 ### About Me 👋
 - Penetration Tester, CTF Player
 
 ### CTF Profiles
 ![alt text](https://www.hackthebox.com/badge/image/2111)<img src="https://tryhackme-badges.s3.amazonaws.com/dibsy0x.png" alt="TryHackMe">
 
+### BUG BOUNTIES
+[BugCrowd](https://bugcrowd.com/h/dibsyhex)
+[HackerOne](https://hackerone.com/dibsyhex?type=user)
+
+### HALL OF FAME / SECURITY RESEARCHERS ACKNOWLEDGEMENTS
+- Microsoft - https://msrc.microsoft.com/update-guide/acknowledgement/archive
 
 ### StackOverflow
 <a href="https://stackoverflow.com/users/2626085/dibsyhex"><img src="https://stackoverflow.com/users/flair/2626085.png" width="208" height="58" alt="profile for Dibsyhex at Stack Overflow, Q&amp;A for professional and enthusiast programmers" title="profile for Dibsyhex at Stack Overflow, Q&amp;A for professional and enthusiast programmers"></a>
 
-### Certification
-- OSCP, GCPN, CWES
+### CERTIFICATIONS
+- OSCP, GCPN, CBBH
 
-### CTF Competition
+### CTF COMPETITIONS
 
-- HackTheBox / HackerOne AI Red Teaming CTF: /ai_gon3_rogu3/ 2025 - Rank 13
-- HackTheBox Holmes CTF - Rank 1064
 - HackTheBox Cyber Apocalypse CTF 2025 - Team Rank 104/8100+ : Team CS
 - Cisco Offensive Summit 2024 CTF by Immersive Labs - Rank 4th (Team)
 - HackTheBox Business CTF 2024 - Team Rank 7/940 Team : Cisco
