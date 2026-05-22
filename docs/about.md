@@ -28,7 +28,7 @@
   </div>
   <div class="portfolio-metric">
     <span class="portfolio-metric__label">Certifications</span>
-    <span class="portfolio-metric__value">OSCP, GCPN, CBBH</span>
+    <span class="portfolio-metric__value">OSCP, GCPN, CWES</span>
   </div>
   <div class="portfolio-metric">
     <span class="portfolio-metric__label">Base</span>
@@ -116,14 +116,12 @@
 
 <div class="portfolio-grid">
   <article class="portfolio-card">
-    <h3>Selected Competition Results</h3>
-    <ul>
-      <li>HackTheBox Business CTF 2024: Team Rank 7 / 940 with Cisco</li>
-      <li>Cisco Offensive Summit 2024 CTF: Rank 4th as a team</li>
-      <li>HackTheBox Cyber Apocalypse CTF 2025: Team Rank 104 / 8100+</li>
-      <li>HackTheBox Business CTF 2020: Rank 12 with SundayParan01ds</li>
-      <li>Virtual Secure Coding Tournament 2020: Rank 6 solo</li>
-    </ul>
+    <h3>Competition and Practice</h3>
+    <p>
+      CTFs have been a big part of how I sharpen offensive intuition, test new
+      exploitation ideas, and stay close to hands-on problem solving across web,
+      infra, cloud, and AI-focused challenge environments.
+    </p>
   </article>
   <article class="portfolio-card">
     <h3>Recognition and Research</h3>
@@ -134,6 +132,25 @@
       <li>Long-running collaboration with the SundayParan01ds CTF team</li>
     </ul>
   </article>
+</div>
+
+## Full CTF Performance
+
+<div class="portfolio-card">
+  <ul>
+    <li>HackTheBox Cyber Apocalypse CTF 2025 - Team Rank 104 / 8100+ : Team CS</li>
+    <li>Cisco Offensive Summit 2024 CTF by Immersive Labs - Rank 4th (Team)</li>
+    <li>HackTheBox Business CTF 2024 - Team Rank 7 / 940 : Cisco</li>
+    <li>HackTheBox Cyber Apocalypse CTF 2024 - Team Rank 251 / 5694 : Team CS</li>
+    <li>HackTheBox Business CTF 2023 - Team Rank 45 / 980 : Cisco Systems</li>
+    <li>HackTheBox Cyber Apocalypse CTF 2023 - Team Rank 587 / 6483 : Solo</li>
+    <li>HackTheBox Business CTF 2022 - Team Rank 110 : Cisco Systems</li>
+    <li>HackTheBox Business CTF 2020 - Rank 12 : SundayParan01ds (SAP)</li>
+    <li>Advent of CTF 2020 - Rank 26 : Solo</li>
+    <li>Virtual Secure Coding Tournament 2020 - Rank 6 : Solo</li>
+    <li>2nd Position in Hacker's Category in SAP CTF 2017</li>
+    <li>Collaborated with SundayParan01ds across multiple CTF events through 2021</li>
+  </ul>
 </div>
 
 ## Profiles and Links
