@@ -1,0 +1,1963 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Offensive & Defesive Operations covering Web, Cloud, Infra, CTFs and many more..">
+      
+      
+      
+      
+        <link rel="prev" href="../../../05/21/espionage-intelligence-writeup/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>From Fleet to Flag: An LLM Agent that Autonomously Solves a CTF - Dibyendu SIKDAR</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#from-fleet-to-flag-an-llm-agent-that-autonomously-solves-a-ctf" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Dibyendu SIKDAR" class="md-header__button md-logo" aria-label="Dibyendu SIKDAR" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Dibyendu SIKDAR
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              From Fleet to Flag: An LLM Agent that Autonomously Solves a CTF
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/dibsy/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  GitHub
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://oxhat.blogspot.com/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Old Blog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../archive/2026/" class="md-tabs__link">
+          
+  
+  
+  Archive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../category/ai-red-team/" class="md-tabs__link">
+          
+  
+  
+  Categories
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Dibyendu SIKDAR" class="md-nav__button md-logo" aria-label="Dibyendu SIKDAR" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Dibyendu SIKDAR
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/dibsy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://oxhat.blogspot.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Old Blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Archive
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Archive
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2026/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2022/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2022
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Categories
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/ai-red-team/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Red Team
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/autonomous-exploitation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomous Exploitation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/cicd-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/ctf-writeup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CTF Writeup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/command-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/github-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/hackthebox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hackthebox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/hackthebox-cyber-apocalypse-ctf-2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hackthebox Cyber Apocalypse CTF 2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/javascript-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/llm-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/privilege-escalation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privilege Escalation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/red-team/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Red Team
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/responsible-disclosure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Responsible Disclosure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/supply-chain-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supply Chain Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/web-application-penetration-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Application Penetration Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#act-1-the-fleet-was-the-wrong-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Act 1: The fleet was the wrong shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#act-2-vv-solve-put-the-whole-problem-back-in-one-head" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Act 2: vv solve — put the whole problem back in one head
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#act-3-the-experiment-matrix-models-seeding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Act 3: the experiment matrix — models × seeding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Act 3: the experiment matrix — models × seeding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-every-model-got-right-and-where-they-all-stalled" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What every model got right — and where they all stalled
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-decisive-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The decisive run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-numbers-cost-tokens-and-a-budget-lesson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The numbers: cost, tokens, and a budget lesson
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The numbers: cost, tokens, and a budget lesson">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-budget-bug-worth-calling-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The budget bug worth calling out
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-the-harness-actually-contributed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the harness actually contributed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-oracle-problem-why-the-fleet-couldnt-gate-this-bug" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The oracle problem: why the fleet couldn't gate this bug
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coda-when-the-fleet-is-right-after-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coda: when the fleet is right after all
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://github.com/dibsy.png" alt="Dibyendu SIKDAR">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          Dibyendu SIKDAR
+                        
+                      </strong>
+                      <br>
+                      Author
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2026-08-13 00:00:00+00:00" class="md-ellipsis">August 13, 2026</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/ai-red-team/">AI Red Team</a>, 
+                              <a href="../../../../category/llm-agents/">LLM Agents</a>, 
+                              <a href="../../../../category/autonomous-exploitation/">Autonomous Exploitation</a>, 
+                              <a href="../../../../category/research/">Research</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              15 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+
+
+<h1 id="from-fleet-to-flag-an-llm-agent-that-autonomously-solves-a-ctf">From Fleet to Flag: An LLM Agent that Autonomously Solves a CTF</h1>
+<p>I spent a week trying to get a machine to solve a Hack The Box web challenge on its own — no
+human feeding it the vulnerability, no peeking at the writeup, just source code, a live target, and
+a model (sometimes handed a lead by <em>another</em> model, never by me). This post is the honest account
+of what worked, what didn't, and what the numbers actually say about model reasoning, hypothesis
+seeding, and the role of the harness around the model.</p>
+<div class="admonition info">
+<p class="admonition-title">This is not a challenge writeup</p>
+<p>The CTF is only the measuring stick. What I actually care about here is <strong>the models and the
+harness</strong>: how architecture around a model decides whether it can reason at all, where stronger
+models pull ahead, how one model's hypothesis accelerates another, and what it costs. The
+vulnerability details appear only as <em>evidence</em> for those claims — if you want the clean
+exploit, the payload is in one code block and you can leave.</p>
+</div>
+<p>The headline: a <strong>mid-tier open model (DeepSeek <code>v4-pro</code>), handed another model's hypothesis and a
+thin single-agent loop, autonomously converted it into a working Mongoose prototype-pollution
+exploit and pulled a live flag for $1.81</strong> — the exact payload every other configuration circled
+but missed.</p>
+<!-- more -->
+
+<hr />
+<h2 id="the-setup">The setup</h2>
+<p>The tool is <strong><code>vuln-validate</code></strong> — a single-machine CLI I built that orchestrates a fleet of
+role-specialised LLM agents inside Docker, behind an egress-allowlisting proxy, over a SQLite
+substrate, with a tree-sitter code index and evidence-gated findings. The design premise was a
+security-audit pipeline: shatter the work across specialists, gate every claim on mechanical
+evidence, surface only what survives.</p>
+<p>The architecture isn't original to me. The role set and the evidence-gating discipline follow
+<a href="https://github.com/CiscoDevNet/foundry-security-spec"><strong>Foundry</strong></a>, Cisco's open specification for
+agentic security-evaluation systems — the same eight core roles (Indexer, Cartographer, Detector,
+Triager, Validator, Reporter, Coverage-Guide, Orchestrator) and the "detection-to-prevention
+flywheel" where each new finding hardens the rule corpus for the next run. <code>vuln-validate</code> is my
+single-machine implementation of that spec; this post is partly a field report on what happens when
+you point that design at problems from both ends of its intended range.</p>
+<p>The test bed was two authorized HTB web challenges. This post focuses on the one that produced the
+cleanest result: <strong><code>secure_notes</code></strong>, a Node/Express/Mongoose app whose flag route is guarded by a
+localhost check:</p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/flag&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">remoteAddress</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">connection</span><span class="p">.</span><span class="nx">remoteAddress</span><span class="p">;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">remoteAddress</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;127.0.0.1&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">remoteAddress</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;::1&#39;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nx">remoteAddress</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="s1">&#39;::ffff:127.0.0.1&#39;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">FLAG</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="s1">&#39;HTB{f4k3_fl4g_f0r_t3st1ng}&#39;</span><span class="p">);</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">403</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span><span class="w"> </span><span class="nx">Message</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Access denied&#39;</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>And an update route that hands the entire request body straight to Mongoose:</p>
+<div class="language-javascript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/update&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="c1">// ...</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">Note</span><span class="p">.</span><span class="nx">findByIdAndUpdate</span><span class="p">(</span><span class="nx">noteId</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span><span class="w">   </span><span class="c1">// req.body includes $set, $rename, ...</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>That's the whole game: you can't reach <code>/flag</code> from outside (you're never <code>127.0.0.1</code>), but
+<code>/update</code> lets you inject arbitrary Mongo update operators. The intended solution is <strong>prototype
+pollution</strong> — poison <code>Object.prototype</code> so the property the <code>/flag</code> check reads resolves to
+<code>127.0.0.1</code>. Getting there autonomously is where it got interesting.</p>
+<div class="admonition note">
+<p class="admonition-title">Rules of engagement</p>
+<p>Everything below was run against an <strong>authorized</strong> HTB challenge instance, scoped to a single
+target host through an allowlisting proxy, one solve at a time, stopping at the flag. No
+lateral movement, no persistence beyond the challenge's own process, no other hosts.</p>
+</div>
+<hr />
+<h2 id="act-1-the-fleet-was-the-wrong-shape">Act 1: The fleet was the wrong shape</h2>
+<p>My first instinct was to point the full multi-agent fleet at the target. The architecture looks
+like this:</p>
+<pre class="mermaid-diagram"><code>flowchart LR
+    O[Orchestrator&lt;br/&gt;vv up] --&gt; C[Cartographer]
+    O --&gt; D[Detector]
+    O --&gt; T[Triager]
+    O --&gt; V[Validator]
+    O --&gt; CG[Coverage-Guide]
+    O --&gt; R[Reporter]
+    C --&gt;|index| S[(SQLite substrate)]
+    D --&gt;|findings| S
+    T --&gt;|verdicts| S
+    V --&gt;|exploit attempts| P{Egress proxy&lt;br/&gt;allowlist}
+    P --&gt; TB[Live target]
+    S --- CG
+    S --- R</code></pre>
+<p>Each role is a separate agent, in its own container, talking only through the substrate and the
+proxy. It's a lovely design for <strong>auditing a large codebase at precision</strong> — and completely wrong
+for solving <em>one</em> target.</p>
+<p>The reason is structural. Solving a CTF is a single tight loop: read the code → form a hypothesis →
+send a payload → read the <em>real</em> response → adjust. The fleet's handoffs and evidence gates
+<strong>sever that loop</strong>. The Detector proposes; the Triager judges on static evidence; the Validator
+tries once and files a verdict. Nobody holds the whole problem in one head long enough to iterate
+on a failed payload. The agent that noticed the prototype-pollution sink was never the same agent
+that got to stand in front of the live <code>/flag</code> response and adjust.</p>
+<p>Worse, the harness itself was full of integration bugs that only surface under a real multi-agent,
+Dockerised, live-target run. Before anything could even fail <em>intelligently</em>, I had to make it fail
+<em>honestly</em>. That was about a dozen fixes:</p>
+<table>
+<thead>
+<tr>
+<th>Fix</th>
+<th>What was actually broken</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wire up the containerised <code>vv up</code> path</td>
+<td>networks, proxy, mounts, credential passthrough were never assembled</td>
+</tr>
+<tr>
+<td>Recover <code>src/vv/substrate</code> from <code>.gitignore</code></td>
+<td>a <code>substrate/</code> pattern silently excluded 19 real source files</td>
+</tr>
+<tr>
+<td>Serialize tool-call arguments as a JSON string on the wire</td>
+<td>DeepSeek 400'd on every tool-call replay</td>
+</tr>
+<tr>
+<td>DELETE journal mode via <code>VV_JOURNAL_MODE</code></td>
+<td>SQLite WAL shared-memory is unreliable on Docker Desktop's virtiofs</td>
+</tr>
+<tr>
+<td>Relative <code>current</code> symlink for the index</td>
+<td>absolute symlink broke inside the container's mount namespace</td>
+</tr>
+<tr>
+<td>Index JS/TS arrow functions &amp; function expressions</td>
+<td>the Node app indexed to <strong>zero</strong> functions</td>
+</tr>
+<tr>
+<td>Resolve citations to route-named handlers</td>
+<td>every true finding was demoted because <code>/update</code> isn't an identifier</td>
+</tr>
+<tr>
+<td>Tolerant + repaired model JSON</td>
+<td>a stray newline or unquoted key lost a verdict entirely</td>
+</tr>
+<tr>
+<td>Coverage-Guide de-spin</td>
+<td>it re-queued the same directed task 124k times</td>
+</tr>
+<tr>
+<td>Rule-sweep before exploratory hunts</td>
+<td>the Detector wandered before checking the known corpus</td>
+</tr>
+<tr>
+<td>Validator proxy-reachability + retry cap</td>
+<td>it spun 12k times on <code>testbed_unavailable</code></td>
+</tr>
+<tr>
+<td>In-process spend cap</td>
+<td>an <em>external</em> budget watcher got blinded by DB-lock contention and overran the budget</td>
+</tr>
+</tbody>
+</table>
+<p>That last one matters more than it looks — see the cost section.</p>
+<p><strong>Finding #1: the harness is not neutral.</strong> A pipeline optimised for audit precision actively
+destroys the reasoning continuity that exploitation needs. The orchestration was essential to run
+anything at all reliably — but its <em>shape</em> has to match the job.</p>
+<hr />
+<h2 id="act-2-vv-solve-put-the-whole-problem-back-in-one-head">Act 2: <code>vv solve</code> — put the whole problem back in one head</h2>
+<p>So I built the opposite of the fleet: a deliberately thin, single free-form agent.</p>
+<pre class="mermaid-diagram"><code>flowchart TD
+    M[Model] --&gt;|list_files| FS[Source tree]
+    M --&gt;|read_file| FS
+    M --&gt;|http_request| PX{Scope-locked&lt;br/&gt;HTTP tool}
+    PX --&gt; TB[Live target]
+    TB --&gt;|real response| M
+    M --&gt;|loop until FLAG| M</code></pre>
+<p>One model, three tools — <code>list_files</code>, <code>read_file</code> (path-traversal guarded), and <code>http_request</code>
+(hard-locked to the in-scope testbed host) — and one instruction: <em>you are a pentester in an
+authorized CTF; read the code, find the bug, exploit the live target, report the flag.</em> No roles,
+no handoffs, no JSON schema to satisfy. The scope enforcement lives in the HTTP tool, not in a
+gate between agents.</p>
+<p>This is just the loop a human runs, and the loop a model runs in a chat — except now it's driving a
+real socket against a real server. That difference is the whole point: the model reacts to <strong>actual
+responses</strong>, not to what it imagines the server would say.</p>
+<p><strong>Finding #2: for solving, thin beats orchestrated.</strong> The single-agent loop did real adaptive
+exploitation the fleet never reached. Same models, same target — the architecture was the variable.</p>
+<hr />
+<h2 id="act-3-the-experiment-matrix-models-seeding">Act 3: the experiment matrix — models × seeding</h2>
+<p>With a loop that could actually iterate, I ran a matrix across two axes:</p>
+<ul>
+<li><strong>Model strength</strong> — DeepSeek <code>v4-flash</code> (cheap workhorse) and <code>v4-pro</code> (the stronger of the two
+  open models), plus a frontier closed model (OpenAI <strong>GPT‑5.2</strong>, <code>gpt-5_2-2025-12-11</code>) used to
+  <em>discover</em> the approach.</li>
+<li><strong>Seeding</strong> — no seed vs. a <strong>hypothesis seed</strong>. The critical discipline here: the seed is a
+  <em>model's own discovered hypotheses</em>, <strong>never the published writeup</strong>. GPT‑5.2 explored the target
+  and wrote down what it believed the bug was; that text — unconfirmed, no working payload — became
+  the seed for the DeepSeek runs. It's a model handing another model a lead, not me handing the
+  model the answer.</li>
+</ul>
+<p>The seed GPT‑5.2 produced, in essence: <em>the app is Mongoose; <code>/flag</code> is gated on a localhost check
+reading a client-address property; pollute that property to <code>127.0.0.1</code> via <code>$set</code>/<code>$rename</code> with
+<code>__proto__</code>/<code>constructor.prototype</code>; the exact property needs to be confirmed from source (guessed
+<code>_peername.address</code>).</em> Right approach, no landed exploit.</p>
+<h3 id="what-every-model-got-right-and-where-they-all-stalled">What every model got right — and where they all stalled</h3>
+<p>Unseeded, every model reached the <strong>concept</strong>: prototype pollution to satisfy the localhost check.
+And every model <strong>stalled at the same wall</strong> — they defaulted to <code>$set</code> with dotted proto-paths,
+which Mongoose sanitises, so pollution never lands. Grasping the vulnerability class is not the same
+as landing the Mongoose-specific payload. The last mile — the exact operator, property, and step
+order — was where capability actually separated the models.</p>
+<h3 id="the-decisive-run">The decisive run</h3>
+<p>Seeded with GPT‑5.2's hypothesis and given a <em>fair</em> budget and turn count, DeepSeek <code>v4-pro</code> did the
+thing none of the others did. Watch it reason through the gadget in real time against the live
+server:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>POST /update {&quot;noteId&quot;:&quot;...&quot;,&quot;$set&quot;:{&quot;title&quot;:&quot;127.0.0.1&quot;}}                       → HTTP 200
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>POST /update {&quot;noteId&quot;:&quot;...&quot;,&quot;$rename&quot;:{&quot;title&quot;:&quot;constructor.prototype.remoteAddress&quot;}} → HTTP 200
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>GET  /flag                                                                       → HTTP 403  ✗
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>POST /update {&quot;noteId&quot;:&quot;...&quot;,&quot;$set&quot;:{&quot;title&quot;:&quot;127.0.0.1&quot;}}                       → HTTP 200
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>POST /update {&quot;noteId&quot;:&quot;...&quot;,&quot;$rename&quot;:{&quot;title&quot;:&quot;__proto__._peername.address&quot;}}  → HTTP 200
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>GET  /flag                                                                       → HTTP 200  ✓
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>HTB{m0ng00s3_pr0t0typ3_p0llus10n_c0mb1n3d_w1th_[…redacted…]}
+</span></code></pre></div>
+<p>Look closely at the two <code>$rename</code> attempts, because that pivot <em>is</em> the result:</p>
+<ol>
+<li>It first polluted <strong><code>constructor.prototype.remoteAddress</code></strong> — the obvious target, since the check
+   reads <code>req.connection.remoteAddress</code>. <code>/flag</code> returned <strong>403</strong>. The pollution landed, but the
+   check still failed.</li>
+<li>It then pivoted to <strong><code>__proto__._peername.address</code></strong> — and <code>/flag</code> returned <strong>200</strong>.</li>
+</ol>
+<p>Why does the second work and the first not? Because <code>socket.remoteAddress</code> in Node isn't a plain
+property — it's a <strong>getter</strong> that internally dereferences <code>this._peername.address</code>. Polluting
+<code>remoteAddress</code> on the prototype is shadowed by that getter and never consulted; polluting the
+deeper <code>_peername.address</code> gadget that the getter <em>actually reads</em> slips the value through. The
+model discovered that distinction <strong>empirically, from the live 403</strong> — there is no source comment to
+read it off. That deref-through-a-getter is exactly the kind of internal Node gadget the challenge is
+built around.</p>
+<p>The winning move mechanically: <code>$set</code> a note field to the string <code>127.0.0.1</code>, then <code>$rename</code> that
+field onto the dotted prototype path <code>__proto__._peername.address</code>. Mongoose happily processes the
+<code>$rename</code> operator; the rename writes through to <code>Object.prototype</code>; every object in the process now
+answers <code>._peername.address</code> as <code>127.0.0.1</code>; the socket's <code>remoteAddress</code> getter reads it; the
+localhost check passes.</p>
+<p><strong>Finding #3: seeding fixes <em>direction</em>, not the <em>last mile</em>.</strong> The seed moved weaker models from
+flailing to the correct attack surface and made them read source for the real property. But turning
+"pollute the property the check reads" into the working <code>$rename</code>→gadget chain took a model with the
+reasoning to iterate on a live negative result. Direction is cheap; the last mile is where model
+strength is spent.</p>
+<p><strong>Finding #4: better models reason better where it counts.</strong> Not in knowing <em>that</em> it's prototype
+pollution — everyone knew that — but in the tight empirical loop: seeing a 403 after a landed
+pollution and correctly inferring <em>"my pollution is real but shadowed; the getter must read a
+different property,"</em> then constructing the right gadget path. That inference is the difference
+between a model that describes the vulnerability and one that captures the flag.</p>
+<hr />
+<h2 id="the-numbers-cost-tokens-and-a-budget-lesson">The numbers: cost, tokens, and a budget lesson</h2>
+<p>Two providers, $5 budget each.</p>
+<table>
+<thead>
+<tr>
+<th>Provider / model</th>
+<th>Role in the experiment</th>
+<th style="text-align: right;">Requests</th>
+<th style="text-align: right;">Tokens</th>
+<th style="text-align: right;">Spend</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OpenAI GPT‑5.2</strong> (<code>gpt-5_2-2025-12-11</code>)</td>
+<td>Strong <em>discovery</em> model — produced the hypothesis seed</td>
+<td style="text-align: right;">179</td>
+<td style="text-align: right;">~823.8K in / ~125K out</td>
+<td style="text-align: right;"><strong>$3.90</strong> / $5</td>
+</tr>
+<tr>
+<td><strong>DeepSeek <code>v4-flash</code></strong></td>
+<td>Cheap workhorse — bulk iteration, fleet + early solve loops</td>
+<td style="text-align: right;">1,127</td>
+<td style="text-align: right;">12,357,968</td>
+<td style="text-align: right;">part of $0.94</td>
+</tr>
+<tr>
+<td><strong>DeepSeek <code>v4-pro</code></strong></td>
+<td><strong>Decisive solver</strong> — landed the flag from the seed</td>
+<td style="text-align: right;">214</td>
+<td style="text-align: right;">2,353,052</td>
+<td style="text-align: right;">part of $0.94</td>
+</tr>
+<tr>
+<td><strong>DeepSeek total</strong></td>
+<td></td>
+<td style="text-align: right;"><strong>1,341</strong></td>
+<td style="text-align: right;"><strong>14,711,020</strong></td>
+<td style="text-align: right;"><strong>$0.94</strong> / $5</td>
+</tr>
+</tbody>
+</table>
+<p>A few things jump out:</p>
+<ul>
+<li><strong>The whole DeepSeek side cost 94 cents</strong> — for 14.7M tokens across 1,341 requests, including the
+  run that actually solved the challenge. The decisive <code>v4-pro</code> solve was <strong>$1.81</strong> on its own
+  (its share within a fair-budget run).</li>
+<li><strong><code>v4-flash</code> did the volume, <code>v4-pro</code> did the win.</strong> 12.4M of the 14.7M tokens were cheap flash
+  iteration — recon, dead ends, harness shakeout. The expensive model was reserved for the runs
+  that needed its reasoning. That's the right shape: burn the cheap model on breadth, spend the
+  strong model on the last mile.</li>
+<li><strong>GPT‑5.2 was ~4× the cost of the entire DeepSeek program</strong> and its contribution was a
+  <em>hypothesis</em>, not a flag. The economically interesting result is that a strong closed model's
+  <em>discovery</em> plus a cheap open model's <em>execution</em> beats either alone — and the seed is portable,
+  reusable, and a fraction of the total tokens.</li>
+</ul>
+<h3 id="the-budget-bug-worth-calling-out">The budget bug worth calling out</h3>
+<p>My first budget guard was an <em>external</em> watcher reading the spend ledger from the DB. Under DELETE
+journal mode on Docker Desktop, DB-lock contention <strong>blinded</strong> it while the solve held the write
+lock — and a run overran the stated budget ($8 against a $5 cap) before the watcher could read the
+ledger again. The fix was to enforce the cap <strong>in-process</strong>, on the same connection that records
+spend, checked before every model call:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">_Budgeted</span><span class="p">:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">complete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">spend</span><span class="o">.</span><span class="n">total</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_conn</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cap</span><span class="p">:</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>            <span class="k">raise</span> <span class="n">_BudgetExceeded</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spend cap $</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_cap</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> reached&quot;</span><span class="p">)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">complete</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Finding #5: a safety control outside the thing it's guarding is only as reliable as the channel
+between them.</strong> For a spend cap, that channel has to be the same transaction that spends. The lesson
+generalises to any agent guardrail: co-locate the control with the action, or contention will find
+the gap.</p>
+<hr />
+<h2 id="what-the-harness-actually-contributed">What the harness actually contributed</h2>
+<p>It would be easy to read "thin single agent won" as "the orchestration was pointless." It wasn't —
+the orchestrator earned its place, just not as a reasoning pipeline:</p>
+<ul>
+<li><strong>Scope enforcement.</strong> The egress proxy / scope-locked HTTP tool is what makes an autonomous
+  agent <em>safe</em> to point at a live target. The model can only ever reach the one authorized host,
+  regardless of what it decides to try.</li>
+<li><strong>A substrate that makes runs comparable.</strong> SQLite + session logs turned every attempt into an
+  inspectable, replayable artifact — which is the only reason I can tell you <code>v4-pro</code> tried
+  <code>constructor.prototype.remoteAddress</code> before <code>__proto__._peername.address</code>. Without that, "it
+  solved it" would be a shrug, not a finding.</li>
+<li><strong>Reproducible provisioning.</strong> Networks, mounts, credential passthrough, per-run budgets — the
+  boring infrastructure that lets you run a <em>matrix</em> instead of a one-off, and trust the numbers.</li>
+<li><strong>The code index.</strong> Even the thin agent benefits from a real parse of the source; the
+  arrow-function and citation fixes were what let a Node target be understood at all.</li>
+</ul>
+<p>The orchestrator's job, it turns out, is <strong>not</strong> to think for the model. It's to make the model's
+thinking safe, observable, and repeatable — and then get out of the reasoning loop.</p>
+<hr />
+<h2 id="the-oracle-problem-why-the-fleet-couldnt-gate-this-bug">The oracle problem: why the fleet couldn't <em>gate</em> this bug</h2>
+<p>There's a deeper reason the audit fleet struggled here than severed reasoning, and it's worth naming
+because it generalises far beyond this challenge. A finding is only "confirmed" when the harness can
+<strong>observe evidence</strong> of it — and this vulnerability produces none in the place the fleet looks.</p>
+<p>The sink is unsanitized Mongo operator injection at <code>findByIdAndUpdate(noteId, req.body)</code>, which lets
+<code>$rename</code> write through to <code>Object.prototype</code> — <strong>prototype pollution (CWE-1321)</strong>, not classic
+NoSQL auth-bypass. The exploit's own response is a boring <code>200</code>; nothing in it says <em>"you just
+polluted the prototype."</em> The effect is <strong>blind</strong>. The only black-box confirmation is a <strong>second,
+stateful</strong> request whose global behaviour changed — <code>GET /flag</code> flipping 403 → 200. The fleet's
+evidence gate expects the <em>response to the exploit</em> to be the proof; for a blind, side-effecting bug
+that response is not the proof, so a detector can correctly <em>hypothesise</em> prototype pollution and the
+validator still has nothing to gate on, and demotes it.</p>
+<p>Worse, the side effect is <strong>global and persistent</strong>, which poisons validation itself. Once any test
+pollutes the process, the baseline is dirty: a later benign payload can "pass" the <code>/flag</code> check
+because a <em>prior</em> test polluted the prototype — a false positive, wrong-payload attribution, and
+non-reproducible runs. The "revert the instance, one solve at a time" rule I worked under isn't an
+operational nicety; it's the vulnerability class corrupting its own oracle.</p>
+<p>This is the distinction that matters when you design the harness:</p>
+<table>
+<thead>
+<tr>
+<th>Vulnerability shape</th>
+<th>Where the evidence is</th>
+<th>Can an evidence-gate confirm it?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Reflected</strong> (SQLi returning rows, echoed XSS)</td>
+<td>in the exploit's own response</td>
+<td>yes — the response <em>is</em> the proof</td>
+</tr>
+<tr>
+<td><strong>Blind / stateful</strong> (prototype pollution, SSRF-to-internal, second-order injection)</td>
+<td>in global state or an out-of-band effect</td>
+<td><strong>no</strong> — needs a separate oracle</td>
+</tr>
+</tbody>
+</table>
+<p>For the blind class you need a <strong>side-effect oracle</strong>: process introspection, an instrumentation
+canary that fires when <code>Object.prototype</code> is written, or a differential probe route whose output
+changes iff the state was mutated. And here your threat model helps rather than hurts — the
+<em>attacker</em> has no such access, but a validator auditing its <strong>own</strong> system does. Host/process access
+(the "if it had SSH to the Node process" intuition) turns an un-gateable finding into a confidently
+confirmed one: read <code>Object.prototype._peername?.address</code> directly, and reset it between tests for
+clean, repeatable validation. It's not cheating; it's the difference between exploitation and
+verification.</p>
+<p>So the black-box thin solver only won here because the challenge happened to <em>hand</em> it an oracle —
+the <code>/flag</code> route that depended on the polluted property. A real blind-pollution bug might expose no
+such route at all, and then even <code>vv solve</code> is stuck without instrumentation. <strong>The next thing the
+fleet needs isn't more reasoning — it's an out-of-band oracle for the vulnerabilities whose evidence
+never appears in an HTTP response.</strong></p>
+<hr />
+<h2 id="coda-when-the-fleet-is-right-after-all">Coda: when the fleet is right after all</h2>
+<p>It would be easy to walk away from this thinking the audit fleet was a dead end and the thin solver
+"won." That's the wrong lesson, and getting it wrong is expensive. The two architectures aren't
+better and worse — they're answers to <strong>two different questions</strong>, and the CTF only asks one of them.</p>
+<p>In a CTF, <em>"is there a vulnerability?"</em> is already answered: <strong>yes, by construction.</strong> The entire
+value is exploitation. So you want the thin loop — one agent spending tokens only on landing the
+payload. Making it prove the bug exists first is pure overhead; everyone already knows it does.</p>
+<p>On a real target, <em>"is there a vulnerability?"</em> <strong>is the whole question — and the answer is usually
+no.</strong> That inverts the economics completely:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CTF target</th>
+<th>Real-world target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base rate of an exploitable bug</td>
+<td>~100% (by construction)</td>
+<td>low / unknown</td>
+</tr>
+<tr>
+<td>The expensive step</td>
+<td>exploitation</td>
+<td><strong>triage</strong> — cheaply ruling things <em>out</em></td>
+</tr>
+<tr>
+<td>Cost of a wrong "yes"</td>
+<td>~zero</td>
+<td>high (human review of false positives)</td>
+</tr>
+<tr>
+<td>Right architecture</td>
+<td>thin <strong><code>vv solve</code></strong> loop</td>
+<td><strong>fleet</strong>: map → detect → gate</td>
+</tr>
+</tbody>
+</table>
+<p>The evidence gates that <em>hurt</em> in the CTF — the handoffs that severed the reasoning loop — are
+exactly what you want when most of the attack surface is <em>not</em> vulnerable. They let you <strong>spend cheap
+tokens to say "no" fast</strong>, and reserve the expensive deep-reasoning model for the few candidates that
+survive triage. Cartographer maps the surface once; cheap detectors sweep it; only gated survivors
+earn a costly exploitation attempt. Burning your best model on every function of a large, mostly-safe
+codebase — the way a thin solver naturally would — is how you turn a security audit into a bill.</p>
+<p>The token split in this experiment already gestures at it: <strong>12.4M cheap <code>v4-flash</code> tokens for
+breadth, <code>v4-pro</code> reserved for the last mile.</strong> That routing <em>is</em> the point. The fleet only pays off
+if the gates are genuinely cheap and the routing is real — cheap model triages, expensive model runs
+only on survivors. Run your strongest model at every stage and you keep all the coordination overhead
+while throwing away the economic advantage that justified the fleet in the first place.</p>
+<p>So the honest rule is:</p>
+<ul>
+<li><strong>Known vulnerability, must-exploit, one target → thin solve loop.</strong> (This post's CTF.)</li>
+<li><strong>Unknown vulnerability, cost-sensitive, false positives expensive → gated fleet.</strong> (Real audits.)</li>
+</ul>
+<p>The fleet wasn't the wrong design. It was the right design for a problem I wasn't solving that day.</p>
+<hr />
+<h2 id="takeaways">Takeaways</h2>
+<ol>
+<li><strong>Match the harness to the task.</strong> Audit pipelines shatter and gate; exploitation needs one
+   continuous loop. The same models flipped from "never close" to "captured the flag" purely on
+   architecture.</li>
+<li><strong>Every model knows the vulnerability class; strong models land the payload.</strong> The last mile —
+   the exact operator, gadget property, and step order, discovered by iterating on live responses —
+   is where capability actually shows up.</li>
+<li><strong>Seed with hypotheses, not answers.</strong> A stronger model's <em>own</em> discovered lead is a cheap,
+   portable, reusable accelerant that fixes direction. It does not substitute for the reasoning that
+   closes the exploit — and, crucially, it's not the writeup.</li>
+<li><strong>Cheap-model breadth + strong-model depth is the efficient frontier.</strong> 12M cheap tokens for
+   exploration, a strong model reserved for the last mile, a flag for under a dollar of open-model
+   spend.</li>
+<li><strong>Co-locate your guardrails with the action they guard.</strong> A spend cap — or any safety control —
+   outside its own transaction can be blinded exactly when it matters.</li>
+<li><strong>Blind, stateful vulnerabilities need an out-of-band oracle.</strong> No evidence-gate on an exploit's
+   own response can confirm prototype pollution, SSRF-to-internal, or second-order injection — their
+   proof lives in global state or a side channel. On a self-owned target, process introspection is
+   the legitimate, decisive oracle; without one, even a working exploit can't be <em>confirmed</em>.</li>
+</ol>
+<p>The machine solved it. But read the transcript and the interesting part isn't that it won — it's
+<em>where</em> it won: one 403, one inference about a Node getter, one better <code>$rename</code>. That's the whole
+frontier of autonomous exploitation in a single request.</p>
+<p><em>All experiments were conducted against an authorized Hack The Box challenge, scoped to a single
+target, one solve at a time, stopping at the flag.</em></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../../../javascripts/mermaid-init.js"></script>
+      
+    
+  </body>
+</html>
