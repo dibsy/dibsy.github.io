@@ -1,0 +1,1605 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Offensive & Defesive Operations covering Web, Cloud, Infra, CTFs and many more..">
+      
+      
+      
+      
+        <link rel="prev" href="../../../08/13/from-fleet-to-flag-an-llm-agent-that-autonomously-solves-a-ctf/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>The Shared Substrate: How an AI Agent's Own Notes Steered It Off Target - Dibyendu SIKDAR</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-shared-substrate-how-an-ai-agents-own-notes-steered-it-off-target" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Dibyendu SIKDAR" class="md-header__button md-logo" aria-label="Dibyendu SIKDAR" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Dibyendu SIKDAR
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              The Shared Substrate: How an AI Agent's Own Notes Steered It Off Target
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../about/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/dibsy/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  GitHub
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://oxhat.blogspot.com/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Old Blog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../archive/2026/" class="md-tabs__link">
+          
+  
+  
+  Archive
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../category/ai-red-team/" class="md-tabs__link">
+          
+  
+  
+  Categories
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Dibyendu SIKDAR" class="md-nav__button md-logo" aria-label="Dibyendu SIKDAR" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Dibyendu SIKDAR
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/dibsy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://oxhat.blogspot.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Old Blog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Archive
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Archive
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2026/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2026
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../archive/2022/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2022
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Categories
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Categories
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/ai-red-team/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Red Team
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/ai-safety/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/autonomous-exploitation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Autonomous Exploitation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/cicd-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CI/CD Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/ctf-writeup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CTF Writeup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/command-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/github-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GitHub Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/hackthebox/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hackthebox
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/hackthebox-cyber-apocalypse-ctf-2025/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hackthebox Cyber Apocalypse CTF 2025
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/javascript-analysis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript Analysis
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/llm-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LLM Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/privilege-escalation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privilege Escalation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/red-team/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Red Team
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/responsible-disclosure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Responsible Disclosure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/supply-chain-security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Supply Chain Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+    
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../category/web-application-penetration-testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Web Application Penetration Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-light-tour-of-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A light tour of the architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-the-substrate-is-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the substrate is dangerous
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-incident-the-wrong-target-off-the-approved-list" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The incident: the wrong target off the approved list
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-part-that-actually-worried-me-blast-radius" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The part that actually worried me: blast radius
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#threat-modelling-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat-modelling the architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+  <div class="md-content md-content--post" data-md-component="content">
+    <div class="md-sidebar md-sidebar--post" data-md-component="sidebar" data-md-type="navigation">
+      <div class="md-sidebar__scrollwrap">
+        <div class="md-sidebar__inner md-post">
+          <nav class="md-nav md-nav--primary">
+            <div class="md-post__back">
+              <div class="md-nav__title md-nav__container">
+                <a href="../../../.." class="md-nav__link">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+                  <span class="md-ellipsis">
+                    Back to index
+                  </span>
+                </a>
+              </div>
+            </div>
+            
+              <div class="md-post__authors md-typeset">
+                
+                  <div class="md-profile md-post__profile">
+                    <span class="md-author md-author--long">
+                      <img src="https://github.com/dibsy.png" alt="Dibyendu SIKDAR">
+                    </span>
+                    <span class="md-profile__description">
+                      <strong>
+                        
+                          Dibyendu SIKDAR
+                        
+                      </strong>
+                      <br>
+                      Author
+                    </span>
+                  </div>
+                
+              </div>
+            
+            <ul class="md-post__meta md-nav__list">
+              <li class="md-nav__item md-nav__item--section">
+                <div class="md-post__title">
+                  <span class="md-ellipsis">
+                    Metadata
+                  </span>
+                </div>
+                <nav class="md-nav">
+                  <ul class="md-nav__list">
+                    <li class="md-nav__item">
+                      <div class="md-nav__link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 19H5V8h14m-3-7v2H8V1H6v2H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-1V1m-1 11h-5v5h5z"/></svg>
+                        <time datetime="2026-09-20 00:00:00+00:00" class="md-ellipsis">September 20, 2026</time>
+                      </div>
+                    </li>
+                    
+                    
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 3v15h3V3zm3 2 4 13 3-1-4-13zM5 5v13h3V5zM3 19v2h18v-2z"/></svg>
+                          <span class="md-ellipsis">
+                            in
+                            
+                              <a href="../../../../category/ai-red-team/">AI Red Team</a>, 
+                              <a href="../../../../category/llm-agents/">LLM Agents</a>, 
+                              <a href="../../../../category/ai-safety/">AI Safety</a>, 
+                              <a href="../../../../category/research/">Research</a></span>
+                        </div>
+                      </li>
+                    
+                    
+                      
+                      <li class="md-nav__item">
+                        <div class="md-nav__link">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 20a8 8 0 0 0 8-8 8 8 0 0 0-8-8 8 8 0 0 0-8 8 8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10 10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67-.75 1.23L11 13V7z"/></svg>
+                          <span class="md-ellipsis">
+                            
+                              8 min read
+                            
+                          </span>
+                        </div>
+                      </li>
+                    
+                  </ul>
+                </nav>
+              </li>
+            </ul>
+            
+          </nav>
+          
+        </div>
+      </div>
+    </div>
+    <article class="md-content__inner md-typeset">
+      
+        
+  
+
+
+
+
+<h1 id="the-shared-substrate-how-an-ai-agents-own-notes-steered-it-off-target">The Shared Substrate: How an AI Agent's Own Notes Steered It Off Target</h1>
+<p>I run a small orchestrator that points LLM agents at security problems and lets them work
+autonomously. Usually the interesting question is whether the model can <em>reason</em>. This post is about
+the other part nobody demos — where the model reasons fine and still does the wrong thing, because
+of what it was allowed to read and where it was allowed to reach.</p>
+<p>One incident makes the point cleanly: <strong>the agent's own notes quietly became the thing that decided
+its actions.</strong> No jailbreak, no outside prompt injection. Two challenges were running side by side.
+When one agent's target went offline, it reached into its notes, found the <em>other</em> challenge's target
+address still sitting there — and because that address was still on its approved list, it decided it
+was a usable target and started working it. A host it was never assigned.</p>
+<!-- more -->
+
+<hr />
+<h2 id="a-light-tour-of-the-architecture">A light tour of the architecture</h2>
+<p>Four moving parts are enough to follow the rest of this post.</p>
+<pre class="mermaid-diagram"><code>flowchart LR
+    O[Orchestrator&lt;br/&gt;controller] --&gt;|prompt + task| W
+    subgraph C[Docker worker container]
+        W[LLM agent&lt;br/&gt;observe / think / act loop] &lt;--&gt;|read / write| N[(NOTES.md&lt;br/&gt;shared substrate)]
+        W --&gt;|shell / tools| T[Tooling + filesystem]
+    end
+    W --&gt;|network| NET{{Egress path}}
+    NET --&gt;|intended| TGT[Sanctioned target]
+    NET -.-&gt;|reachable but&lt;br/&gt;unintended| X[Everything else on the range]</code></pre>
+<ul>
+<li><strong>Orchestrator</strong> — starts a task, feeds the agent a prompt, and can stop/resume it. It doesn't
+  solve anything itself.</li>
+<li><strong>LLM agent</strong> — a model in an agentic loop (observe → think → act) inside an isolated Docker
+  worker, running shell and tools over many <em>iterations</em>.</li>
+<li><strong><code>NOTES.md</code> — the shared substrate.</strong> The one that matters: a durable scratchpad the agent writes
+  findings into and <strong>re-reads every turn</strong>. It survives restarts and resumes, and between sessions
+  the notes <em>are</em> the handoff. Effectively, the agent's long-term memory.</li>
+<li><strong>Egress path + approved list</strong> — how the container reaches the network, and which hosts it's
+  permitted to. Here the approved list was <em>shared across the challenges running at once</em>, so each
+  agent was allowed to reach the other's target — not just its own.</li>
+</ul>
+<p>The last two bullets are the whole story.</p>
+<hr />
+<h2 id="why-the-substrate-is-dangerous">Why the substrate is dangerous</h2>
+<p>The substrate is efficient — and the highest-risk surface in the system, for three reasons that
+compound:</p>
+<ol>
+<li><strong>Trusted by default.</strong> The model treats everything in its context as ground truth; a line in
+   <code>NOTES.md</code> weighs the same as a fact it just verified. There's no sense of <em>provenance</em>.</li>
+<li><strong>Self-authored and re-asserting.</strong> The agent wrote most of it and reads it back every turn, so a
+   value recorded early returns on every iteration as if still current. The notes don't just <em>store</em>
+   beliefs — they <em>reassert</em> them.</li>
+<li><strong>Mixes categories.</strong> Evidence, addresses, instructions, stale values, and scratch share one
+   file, with nothing marking which is which — or which is still true.</li>
+</ol>
+<p>Together they produce a subtle, reliable failure: <strong>the model keeps acting on whatever the substrate
+keeps showing it, even after the world has changed underneath it.</strong></p>
+<hr />
+<h2 id="the-incident-the-wrong-target-off-the-approved-list">The incident: the wrong target off the approved list</h2>
+<div class="admonition quote">
+<p class="admonition-title">The failure in one line</p>
+<p>The agent's target died, so it took the next address its notes offered — and the approved list,
+still carrying another task's target, told it that was fine.</p>
+</div>
+<p>Two challenges were running, each with its own agent and its own sanctioned target:</p>
+<ul>
+<li><strong>Challenge A</strong> → target <strong>IP X</strong></li>
+<li><strong>Challenge B</strong> → target <strong>IP Y</strong></li>
+</ul>
+<p><strong>Challenge A finished first</strong> — it was solved, and its target <strong>IP X was released</strong> back to the pool
+when it completed. That should have been the end of X's relevance. But both addresses had already
+ended up in the shared context: the notes carried them, and the <strong>approved list</strong> (the set of hosts
+the workers were permitted to reach) still contained X even after A was done. Convenient while
+everything's up. A trap the moment something isn't.</p>
+<p>Then <strong>Challenge B's target, IP Y, went offline.</strong> B's agent noticed correctly — Y was unreachable —
+and instead of stopping there, it did the resourceful thing: it scanned its notes for a target to
+work, and found <strong>IP X</strong>. X wasn't B's to touch — it was Challenge A's target, and A was already
+<strong>solved and its IP released</strong>, so X was no longer assigned to me at all. But <strong>X was still on the
+approved list</strong>, so the agent's own guardrail answered "yes, you may reach that," and it concluded X
+was a usable target and started working it.</p>
+<p>Nothing here was a model malfunction. The agent reasoned exactly as designed: my current target is
+down → is there another target I know of? → yes, one in my notes → am I allowed to reach it? → the
+approved list says yes → proceed. Every step was locally correct. The failure was that <strong>the
+substrate offered a target from a <em>different</em> task, and the guardrail that should have caught it was
+scoped too broadly to say no.</strong></p>
+<p>It stopped only when I set the substrate straight — scrub X out of B's notes and narrow the approved
+list to B's actual target. The fix wasn't a smarter model or a better prompt; it was fixing what the
+model was allowed to read and reach.</p>
+<pre class="mermaid-diagram"><code>sequenceDiagram
+    autonumber
+    participant A as Challenge B&lt;br/&gt;agent
+    participant N as Notes
+    participant L as Approved list
+    participant Y as IP Y (B's target)
+    participant X as IP X (A's target)
+
+    Note over X: Challenge A solved —&lt;br/&gt;IP X released
+    A-&gt;&gt;Y: work the target ✓
+    Note over Y: IP Y goes offline
+    A-&gt;&gt;Y: unreachable ✗
+
+    A-&gt;&gt;N: any other target?
+    N--&gt;&gt;A: found IP X
+    A-&gt;&gt;L: is X allowed?
+    L--&gt;&gt;A: yes (still on the list)
+    A-&gt;&gt;X: start working X ✗&lt;br/&gt;(not mine — Challenge A's host)
+
+    Note over A,X: fixed by scrubbing X from notes&lt;br/&gt;+ narrowing the list to Y only</code></pre>
+<hr />
+<h2 id="the-part-that-actually-worried-me-blast-radius">The part that actually worried me: blast radius</h2>
+<p>This time it resolved without harm. It might not have — and <em>that's</em> the point, because of what sits
+behind the "reachable but unintended" line in the diagram.</p>
+<p>These environments are <strong>dynamic and shared</strong>: live infrastructure with other things running, other
+users connected, and addresses handed out and recycled. An autonomous process that keeps acting on
+<em>whatever its notes say</em> rather than <em>what it's scoped to</em> is a real problem, not a theoretical one:</p>
+<ul>
+<li><strong>It works a host it was never assigned.</strong> This isn't hypothetical — it's what happened here: the
+  agent started on another task's target. And these addresses are <strong>not static</strong> — they get handed
+  back into a pool and <strong>reassigned</strong>, so an address that was a sibling task's target an hour ago may
+  by now belong to <strong>a different user entirely</strong>. Either way the agent, still believing it's on its
+  own target, is sending unsolicited traffic at a host that isn't its to touch.</li>
+<li><strong>It can disrupt other users.</strong> Shared connectivity means shared fate. Here my <em>own</em>
+  progress-poller — repeatedly probing an address to detect progress — was itself feeding a
+  rate-limit on the shared path. An agent doing that at machine speed can degrade connectivity for
+  everyone on it.</li>
+<li><strong>It can look exactly like an attack.</strong> Automated, repeated connections to a host you were never
+  scoped to is the textbook signature of a scan. An off-target agent doesn't have to <em>do</em> damage to
+  cause an incident — it just has to trip detection, and now you're explaining to an abuse desk why
+  your traffic looks hostile.</li>
+<li><strong>Attribution lands on you.</strong> The agent acts from <em>your</em> connection, <em>your</em> credentials, <em>your</em>
+  address. Whatever it does is, for all practical purposes, done by you.</li>
+<li><strong>It quietly burns budget.</strong> Every off-target iteration is still a full model turn — tokens spent,
+  money spent — producing nothing. A confidently-wrong agent doesn't just risk harm; it can grind for
+  hours against the wrong host, running up the bill the whole time while making zero real progress.</li>
+</ul>
+<p>None of this needed a malicious model — just a model <em>confidently wrong about its target</em> on a path
+that didn't enforce scope for it.</p>
+<hr />
+<h2 id="threat-modelling-the-architecture">Threat-modelling the architecture</h2>
+<p>Step back from the story and draw the trust boundaries, and the incident stops looking like a model
+mistake and starts looking like a design flaw. The model behaved reasonably at every step; the
+<em>architecture</em> let a reasonable local decision reach across a boundary that should have held.</p>
+<p>There are really two boundaries in this system, and the failure is what each one was made of:</p>
+<ul>
+<li><strong>The data boundary — the substrate.</strong> In threat-model terms, <code>NOTES.md</code> is <strong>untrusted input</strong>,
+  even though the agent authored it. It's shared across tasks, mutable, and unlabelled: a value from
+  a <em>completed</em> task (X) sits beside a live one (Y) with exactly the same authority. The moment the
+  agent treats a line of notes as an instruction ("here is a target"), data has crossed into
+  control. There is no per-task isolation and no provenance, so the substrate can hand the agent a
+  target that was never in scope.</li>
+<li><strong>The enforcement boundary — the approved list.</strong> This is the one control the model can't talk its
+  way past: it decides what the worker can actually <em>reach</em>. But it was scoped <strong>across all running
+  tasks</strong>, so it couldn't tell "B's target" from "A's released target." An enforcement boundary
+  wider than the unit of work isn't a boundary — it's a permission slip.</li>
+</ul>
+<p>Put together, this is a textbook <strong>confused deputy</strong>. The agent had legitimate authority to reach
+approved hosts and used that authority on a host it shouldn't have — not by escalating privilege,
+but because the privilege it already held was <strong>granted too broadly</strong>. Right actor, over-scoped
+permission, wrong object.</p>
+<p>That reframes where a control has to live. A rule in the prompt — <em>"only touch Y"</em> — sits <strong>inside</strong>
+the boundary the model itself governs; it's advisory, and a confidently-wrong model can reason its
+way around it (that is exactly what happened). The controls that hold are the ones <strong>outside</strong> the
+model's reach, drawn at the unit of work:</p>
+<ul>
+<li><strong>Scope the egress allowlist to one task's single target</strong>, default-deny for everything else, and
+  <strong>expire it when the task ends</strong> — so a released address like X leaves the list the instant the
+  challenge it belonged to is done. Off-target packets then simply don't leave, no matter what the
+  notes say.</li>
+<li><strong>Isolate the substrate per task</strong> and tag every entry with provenance (<code>live</code>, <code>hypothesis</code>,
+  <code>retired</code>), so a stale or foreign value can't present itself as a current instruction.</li>
+<li><strong>Bound the assets, not just the model.</strong> The things actually at risk here — other tenants' hosts,
+  the shared path, your own attribution, your budget — all sit behind those two boundaries. Harden
+  the boundaries and a confidently-wrong agent becomes a contained annoyance instead of an incident.</li>
+</ul>
+<p>The model is the part everyone watches. In this architecture it was never the weak point — the
+boundaries around it were.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+  
+
+
+
+      
+    </article>
+  </div>
+
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
+      
+        <script src="../../../../javascripts/mermaid-init.js"></script>
+      
+    
+  </body>
+</html>
